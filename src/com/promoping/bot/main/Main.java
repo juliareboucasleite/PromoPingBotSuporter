@@ -17,6 +17,8 @@ public class Main {
         CommandManager.register(new Ping());
         CommandManager.register(new Status());
         CommandManager.register(new Counting());
+        CommandManager.register(new DbTest());
+
 
         JDABuilder.create(token, EnumSet.of(
                                 GatewayIntent.GUILD_MESSAGES,
