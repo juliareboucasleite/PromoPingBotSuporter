@@ -65,8 +65,7 @@ public class TicketCommand extends BaseCommand {
             if (mentionedChannel != null) {
                 targetChannel = mentionedChannel;
             } else {
-                event.getChannel().sendMessage("Canal invalido! Mencione um canal de texto valido ou use o comando no canal desejado.
-**Exemplo:** `!ticket #suporte`")
+                event.getChannel().sendMessage("Canal invalido! Mencione um canal de texto valido ou use o comando no canal desejado.\\n**Exemplo:** `!ticket #suporte`")
                         .queue();
                 return;
             }
