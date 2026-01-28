@@ -1,11 +1,10 @@
 package com.promoping.bot.comandos.general;
 
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import net.dv8tion.jda.api.entities.emoji.Emoji;
-
 import com.promoping.bot.comandos.core.BaseCommand;
 import com.promoping.bot.utils.EmbedBuilder;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.util.Arrays;
 import java.util.List;
@@ -48,7 +47,7 @@ public class SugerirCommand extends BaseCommand {
         Button sugerirBtn = Button.primary(
                 "abrir_formulario_sugestao",
                 "Sugerir Funcionalidade"
-        ).withEmoji(Emoji.fromUnicode("💡"));
+        );
 
         event.getChannel()
                 .sendMessageEmbeds(embed.build())
