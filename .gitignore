@@ -29,5 +29,5 @@ bin/
 ### Mac OS ###
 .DS_Store
 
-
+### a parte do env
 config.properties
