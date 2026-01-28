@@ -451,7 +451,7 @@ public class ButtonListener extends ListenerAdapter {
     private TextChannel findExistingTicket(List<TextChannel> channels, String userId) {
         for (TextChannel ch : channels) {
             String topic = ch.getTopic();
-            if (topic != null && topic.contains("ticket_owner:" + userId)) {
+            if (topic != null && topic.contains("ticket_owner: " + userId)) {
                 return ch;
             }
         }
@@ -474,12 +474,12 @@ public class ButtonListener extends ListenerAdapter {
         String clean = username.toLowerCase().replaceAll("[^a-z0-9]", "");
         if (clean.isEmpty()) clean = userId.substring(0, 4);
         String suffix = userId.length() > 4 ? userId.substring(userId.length() - 4) : userId;
-        return "ticket-" + clean + "-" + suffix;
+        return "ticket- " + clean + "-" + suffix;
     }
 
     private void confirmCloseTicket(ButtonInteractionEvent event) {
         TextChannel channel = event.getChannel().asTextChannel();
-        if (!channel.getName().startsWith("ticket-")) {
+        if (!channel.getName().startsWith("ticket- ")) {
             event.reply("Este botao so funciona em canais de ticket.")
                     .setEphemeral(true)
                     .queue();
@@ -576,7 +576,7 @@ public class ButtonListener extends ListenerAdapter {
 
     private boolean isTicketOwner(TextChannel channel, String userId) {
         String topic = channel.getTopic();
-        return topic != null && topic.contains("ticket_owner:" + userId);
+        return topic != null && topic.contains("ticket_owner: " + userId);
     }
 
     private boolean hasSupportRole(Member member) {
