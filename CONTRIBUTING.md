@@ -16,53 +16,23 @@ Suggestions are always welcome! Check if a similar suggestion already exists in 
 
 ### Development Environment Setup
 
-1. Fork the repository
-2. Clone your fork locally
-3. Install dependencies using Maven or Gradle (check the project's build file)
-4. Configure environment variables by creating a `config.properties` file based on the example (if it exists)
-5. Configure the Discord token in the configuration file
+To get started with contributing, first fork the repository and clone your fork locally to your machine. Once you have the project, install the dependencies using Maven or Gradle (check the build file in the project for details on how to proceed). You will need to configure the environment variables; to do this, create a `config.properties` file based on the available example (if there is one). Don’t forget to insert your Discord token into the configuration file so that the bot can run correctly.
 
 ### Development Process
 
-1. Create a branch for your feature/fix (`feature/feature-name` or `fix/bug-name`)
-2. Follow code standards (Java following standard conventions, JDA for Discord)
-3. Write clean code (small, focused functions, descriptive names, comments when necessary, avoid duplication)
-4. Test your changes manually and verify you haven't broken existing functionality
-5. Make commits following the convention (feat, fix, docs, style, refactor, test, chore)
-6. Push to your fork
-7. Open a Pull Request with a clear description of the changes, related issues (if any), screenshots (if applicable), and verification checklist
+Before implementing a new feature or fixing a bug, create a dedicated branch for your work, using a naming convention such as `feature/feature-name` or `fix/bug-name`. While developing, follow the project's code standards (Java following official conventions and best practices for JDA/Discord integration). Write clean code: keep functions small and focused, use descriptive names, add comments when necessary, and avoid duplicating logic. Manually test your changes to ensure nothing is broken after your implementation. Make commits using clear conventions such as: feat, fix, docs, style, refactor, test, or chore. Once finished, push your changes to your fork and open a Pull Request with a detailed description of the modifications made, linking issues if present, adding screenshots if necessary, and completing the checklist.
 
-To better understand how the PromoPing Bot Suporter project is managed and how to collaborate, we recommend reviewing [README.md](README.md) and the submission guidelines.
+For more details about the collaboration process or to understand the PromoPing Bot Suporter guidelines, consult the [README.md](README.md) and submission instructions.
 
 ## Code Standards
 
-**Java**:
-- Use descriptive names in camelCase for variables and methods
-- Use PascalCase for classes
-- Follow standard Java conventions
-- Use consistent indentation (4 spaces or tabs as configured in the project)
-- Add JavaDoc for public classes and methods
-- Prefer interfaces when appropriate
-- Use proper exception handling
-- Keep methods small and focused on a single responsibility
+When developing in Java, use descriptive names in camelCase for variables and methods, and PascalCase for class names. Keep indentation consistent (4 spaces or tabs, according to the project’s configuration). Add JavaDoc to public classes and methods, prefer interfaces when appropriate, and always handle exceptions properly. Functions should be small, focused, and fulfill only one responsibility.
 
-**JDA (Java Discord API)**:
-- Follow JDA library best practices
-- Handle events asynchronously when appropriate
-- Validate permissions before executing administrative commands
-- Use adequate logging for debugging and auditing
+For JDA (Java Discord API), follow the best practices recommended by the library. Prefer asynchronous event handling when appropriate, validate permissions before executing administrative commands, and use proper logging for debugging and auditing.
 
 ## Pull Request Checklist
 
-Before submitting a PR, verify:
-- [ ] Code follows project standards
-- [ ] Functionality tested manually
-- [ ] No compilation or lint errors
-- [ ] Documentation updated (if necessary)
-- [ ] Commits follow the convention
-- [ ] Branch is up to date with main/master
-- [ ] PR has a clear description and screenshots (if applicable)
-- [ ] Bot commands were tested on Discord (if applicable)
+Before submitting a Pull Request, ensure your code adheres to project standards, all functionalities have been manually tested, and there are no compilation or lint errors. Update documentation if necessary. Commits should follow the defined conventions, and the branch must be up-to-date with the main/master branch. The Pull Request should contain a clear description and illustrative screenshots if applicable, and confirm that bot commands have been tested on Discord when necessary.
 
 ## Review Process
 

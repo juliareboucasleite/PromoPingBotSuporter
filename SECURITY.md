@@ -18,13 +18,7 @@ Once we receive your report, we will confirm receipt within 48 hours, provide an
 
 ## Relevant Vulnerability Types
 
-Given that this is an administrative Discord bot, specific vulnerabilities may include:
-- Token or credential exposure
-- Unauthorized command execution
-- Unauthorized access to administrative features
-- Sensitive information leakage through commands
-- Vulnerabilities in communication with external APIs
-- Command authentication/authorization issues
+As this is an administrative Discord bot, the most relevant types of vulnerabilities include exposure of tokens or credentials, unauthorized command execution, unauthorized access to administrative functions, leakage of sensitive information through commands, vulnerabilities in communication with external APIs, and issues related to command authentication or authorization.
 
 ## Supported Versions
 
