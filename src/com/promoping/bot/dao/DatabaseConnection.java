@@ -64,7 +64,13 @@ public class DatabaseConnection {
     public static Connection getConnection() throws SQLException {
         String url = String.format("jdbc:mysql://%s:%d/%s?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true", 
                 dbHost, dbPort, dbName);
-        
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("MySQL driver not found in classpath", e);
+        }
+
         return DriverManager.getConnection(url, dbUser, dbPassword);
     }
     
