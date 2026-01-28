@@ -3,6 +3,7 @@ package com.promoping.bot.listeners;
 import com.promoping.bot.services.ReviewSessionStore;
 import com.promoping.bot.services.ReviewSessionStore.ReviewSession;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -19,12 +20,21 @@ import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.interactions.modals.Modal;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class ButtonListener extends ListenerAdapter {
 
-    private static final String SUPPORT_ROLE_ID = System.getenv("DISCORD_SUPPORT_ROLE_ID");
+    private static final String SUPPORT_ROLE_ID_ENV = System.getenv("DISCORD_SUPPORT_ROLE_ID");
+    private static final String[] SUPPORT_ROLE_IDS = new String[]{
+            "1442655668904398980",
+            "1460655734600630354",
+            "1454133429858730005",
+            "1460655975034781706"
+    };
     private static final String TICKETS_CATEGORY_NAME = "Tickets";
 
     @Override
@@ -44,6 +54,11 @@ public class ButtonListener extends ListenerAdapter {
         String componentId = event.getComponentId();
         if (componentId.startsWith("review_rating_")) {
             handleRating(event, componentId);
+            return;
+        }
+
+        if (componentId.startsWith("ticket_confirm_")) {
+            handleTicketConfirm(event, componentId.substring("ticket_confirm_".length()));
             return;
         }
 
@@ -91,11 +106,23 @@ public class ButtonListener extends ListenerAdapter {
                 break;
 
             case "ticket_close":
+                confirmCloseTicket(event);
+                break;
+
+            case "ticket_close_confirm":
                 closeTicket(event);
+                break;
+
+            case "ticket_close_cancel":
+                event.reply("Fechamento cancelado.").setEphemeral(true).queue();
                 break;
 
             case "ticket_call_support":
                 callSupport(event);
+                break;
+
+            case "ticket_cancel":
+                event.reply("Criacao cancelada.").setEphemeral(true).queue();
                 break;
         }
     }
@@ -114,9 +141,7 @@ public class ButtonListener extends ListenerAdapter {
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setTitle("Anonimato")
-                .setDescription("Voce esta avaliando: **" + tipoNome(tipo) + "**
-
-Deseja que sua avaliacao seja anonima?")
+                .setDescription("Voce esta avaliando: **" + tipoNome(tipo) + "**\n\nDeseja que sua avaliacao seja anonima?")
                 .setColor(0x5865F2);
 
         event.replyEmbeds(embed.build())
@@ -171,10 +196,7 @@ Deseja que sua avaliacao seja anonima?")
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setTitle("Avaliacao")
-                .setDescription("Nota selecionada: " + rating + "/5
-
-Agora envie sua avaliacao:
-`!review-texto <sua avaliacao>`")
+                .setDescription("Nota selecionada: " + rating + "/5\n\nAgora envie sua avaliacao:\n`!review-texto <sua avaliacao>`")
                 .setColor(0x00ff00);
 
         event.replyEmbeds(embed.build())
@@ -281,15 +303,41 @@ Agora envie sua avaliacao:
     }
 
     private void openTicketMenu(ButtonInteractionEvent event) {
+        if (event.getGuild() == null) {
+            event.reply("Este menu so funciona dentro de um servidor.")
+                    .setEphemeral(true)
+                    .queue();
+            return;
+        }
+
+        TextChannel existing = findExistingTicket(event.getGuild().getTextChannels(), event.getUser().getId());
+        if (existing != null) {
+            EmbedBuilder embed = new EmbedBuilder()
+                    .setTitle("Ticket Ja Existe")
+                    .setDescription("Voce ja tem um ticket aberto: " + existing.getAsMention())
+                    .setColor(0xffa500)
+                    .setTimestamp();
+
+            event.replyEmbeds(embed.build()).setEphemeral(true).queue();
+            return;
+        }
+
         StringSelectMenu menu = StringSelectMenu.create("ticket_category_select")
-                .setPlaceholder("Selecione a categoria do ticket...")
-                .addOption("Duvida sobre o Bot", "bot")
-                .addOption("Problema no Site", "site")
-                .addOption("Pagamentos/Planos", "pagamentos")
-                .addOption("Outros", "outros")
+                .setPlaceholder("Selecione uma categoria...")
+                .addOption("Notificacoes", "notificacoes", "Problema com notificacoes")
+                .addOption("Duvida", "duvida", "Duvida sobre o bot")
+                .addOption("Login", "login", "Erro ao fazer login")
+                .addOption("Produtos", "produtos", "Problema com produtos")
+                .addOption("Outros", "outros", "Outro tipo de problema")
                 .build();
 
-        event.reply("Escolha a categoria do seu ticket:")
+        EmbedBuilder embed = new EmbedBuilder()
+                .setTitle("Escolha a Categoria do Ticket")
+                .setDescription("Selecione a categoria que melhor descreve seu problema.")
+                .setColor(0x5865F2)
+                .setTimestamp();
+
+        event.replyEmbeds(embed.build())
                 .setEphemeral(true)
                 .setComponents(ActionRow.of(menu))
                 .queue();
@@ -306,11 +354,40 @@ Agora envie sua avaliacao:
         String categoria = event.getValues().get(0);
         String categoriaLabel = ticketCategoryLabel(categoria);
 
-        TextChannel existing = findExistingTicket(event.getGuild().getTextChannels(), event.getUser().getId());
-        if (existing != null) {
-            event.reply("Voce ja tem um ticket aberto: " + existing.getAsMention())
+        EmbedBuilder confirm = new EmbedBuilder()
+                .setTitle("Confirmar Criacao do Ticket")
+                .setDescription("Categoria selecionada: **" + categoriaLabel + "** Clique em Confirmar para criar o ticket.")
+                .setColor(0x00ff00)
+                .setTimestamp();
+
+        Button confirmar = Button.success("ticket_confirm_" + categoria, "Confirmar");
+        Button cancelar = Button.danger("ticket_cancel", "Cancelar");
+
+        event.replyEmbeds(confirm.build())
+                .setEphemeral(true)
+                .setActionRow(confirmar, cancelar)
+                .queue();
+    }
+
+    private void handleTicketConfirm(ButtonInteractionEvent event, String categoria) {
+        if (event.getGuild() == null) {
+            event.reply("Este botao so funciona dentro de um servidor.")
                     .setEphemeral(true)
                     .queue();
+            return;
+        }
+
+        String categoriaLabel = ticketCategoryLabel(categoria);
+
+        TextChannel existing = findExistingTicket(event.getGuild().getTextChannels(), event.getUser().getId());
+        if (existing != null) {
+            EmbedBuilder embed = new EmbedBuilder()
+                    .setTitle("Ticket Ja Existe")
+                    .setDescription("Voce ja tem um ticket aberto: " + existing.getAsMention())
+                    .setColor(0xffa500)
+                    .setTimestamp();
+
+            event.replyEmbeds(embed.build()).setEphemeral(true).queue();
             return;
         }
 
@@ -329,28 +406,19 @@ Agora envie sua avaliacao:
                         Arrays.asList(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND, Permission.MESSAGE_HISTORY),
                         Collections.emptyList())
                 .queue(channel -> {
-                    if (SUPPORT_ROLE_ID != null && !SUPPORT_ROLE_ID.isEmpty()) {
-                        Role supportRole = event.getGuild().getRoleById(SUPPORT_ROLE_ID);
-                        if (supportRole != null) {
-                            channel.upsertPermissionOverride(supportRole)
-                                    .setAllowed(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND, Permission.MESSAGE_HISTORY)
-                                    .queue();
-                        }
+                    for (Role role : getSupportRoles(event)) {
+                        channel.upsertPermissionOverride(role)
+                                .setAllowed(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND, Permission.MESSAGE_HISTORY)
+                                .queue();
                     }
 
                     EmbedBuilder embed = new EmbedBuilder()
                             .setTitle("Ticket de Suporte Criado")
-                            .setDescription("**Ticket criado por:** " + event.getUser().getAsMention() + "
-" +
-                                    "**Categoria:** " + categoriaLabel + "
-
-" +
-                                    "**Informacoes**
-" +
-                                    "- Um membro da equipe de suporte respondera em breve
-" +
-                                    "- Descreva seu problema com detalhes
-" +
+                            .setDescription("**Ticket criado por:** " + event.getUser().getAsMention() + " " +
+                                    "**Categoria:** " + categoriaLabel + " " +
+                                    "**Informacoes** " +
+                                    "- Um membro da equipe de suporte respondera em breve" +
+                                    "- Descreva seu problema com detalhes" +
                                     "- Use os botoes abaixo para gerenciar o ticket")
                             .setColor(0x00ff00)
                             .setTimestamp()
@@ -363,7 +431,15 @@ Agora envie sua avaliacao:
                             .setActionRow(fecharBtn, chamarBtn)
                             .queue();
 
-                    event.reply("Ticket criado: " + channel.getAsMention())
+                    EmbedBuilder success = new EmbedBuilder()
+                            .setTitle("Ticket Criado com Sucesso!")
+                            .setDescription("Seu ticket foi criado: " + channel.getAsMention() + " " +
+                                    "**Categoria:** " + categoriaLabel + " " +
+                                    "Clique no canal acima para acessa-lo.")
+                            .setColor(0x00ff00)
+                            .setTimestamp();
+
+                    event.replyEmbeds(success.build())
                             .setEphemeral(true)
                             .queue();
                 }, error -> event.reply("Nao consegui criar o ticket. Verifique as permissoes do bot.")
@@ -381,6 +457,12 @@ Agora envie sua avaliacao:
         return null;
     }
 
+    private Category getOrCreateTicketsCategory(ButtonInteractionEvent event) {
+        List<Category> cats = event.getGuild().getCategoriesByName(TICKETS_CATEGORY_NAME, true);
+        if (!cats.isEmpty()) return cats.get(0);
+        return event.getGuild().createCategory(TICKETS_CATEGORY_NAME).complete();
+    }
+
     private Category getOrCreateTicketsCategory(StringSelectInteractionEvent event) {
         List<Category> cats = event.getGuild().getCategoriesByName(TICKETS_CATEGORY_NAME, true);
         if (!cats.isEmpty()) return cats.get(0);
@@ -394,6 +476,30 @@ Agora envie sua avaliacao:
         return "ticket-" + clean + "-" + suffix;
     }
 
+    private void confirmCloseTicket(ButtonInteractionEvent event) {
+        TextChannel channel = event.getChannel().asTextChannel();
+        if (!channel.getName().startsWith("ticket-")) {
+            event.reply("Este botao so funciona em canais de ticket.")
+                    .setEphemeral(true)
+                    .queue();
+            return;
+        }
+
+        EmbedBuilder confirm = new EmbedBuilder()
+                .setTitle("Confirmar Fechamento")
+                .setDescription("Tem certeza que deseja fechar este ticket?")
+                .setColor(0xffa500)
+                .setTimestamp();
+
+        Button sim = Button.danger("ticket_close_confirm", "Sim, Fechar");
+        Button nao = Button.secondary("ticket_close_cancel", "Cancelar");
+
+        event.replyEmbeds(confirm.build())
+                .setEphemeral(true)
+                .setActionRow(sim, nao)
+                .queue();
+    }
+
     private void closeTicket(ButtonInteractionEvent event) {
         TextChannel channel = event.getChannel().asTextChannel();
         if (!channel.getName().startsWith("ticket-")) {
@@ -404,8 +510,7 @@ Agora envie sua avaliacao:
         }
 
         boolean isAdmin = event.getMember() != null && event.getMember().hasPermission(Permission.ADMINISTRATOR);
-        boolean hasSupport = SUPPORT_ROLE_ID != null && event.getMember() != null &&
-                event.getMember().getRoles().stream().anyMatch(r -> r.getId().equals(SUPPORT_ROLE_ID));
+        boolean hasSupport = hasSupportRole(event.getMember());
         boolean isOwner = isTicketOwner(channel, event.getUser().getId());
 
         if (!isOwner && !isAdmin && !hasSupport) {
@@ -414,6 +519,10 @@ Agora envie sua avaliacao:
                     .queue();
             return;
         }
+
+        event.reply("Ticket sera fechado em 10 segundos...")
+                .setEphemeral(true)
+                .queue();
 
         EmbedBuilder closeEmbed = new EmbedBuilder()
                 .setTitle("Ticket Fechado")
@@ -424,33 +533,89 @@ Agora envie sua avaliacao:
                 .setFooter("PromoPing - Suporte");
 
         channel.sendMessageEmbeds(closeEmbed.build()).queue();
-        channel.delete().queueAfter(10, java.util.concurrent.TimeUnit.SECONDS);
-        event.reply("Fechando ticket...").setEphemeral(true).queue();
+        channel.delete().queueAfter(10, TimeUnit.SECONDS);
     }
 
     private void callSupport(ButtonInteractionEvent event) {
-        if (SUPPORT_ROLE_ID == null || SUPPORT_ROLE_ID.isEmpty()) {
+        Set<Member> supportMembers = getSupportMembers(event);
+        int online = 0;
+        int dnd = 0;
+        int offline = 0;
+
+        for (Member m : supportMembers) {
+            OnlineStatus st = m.getOnlineStatus();
+            if (st == OnlineStatus.ONLINE) online++;
+            else if (st == OnlineStatus.DO_NOT_DISTURB) dnd++;
+            else if (st == OnlineStatus.OFFLINE || st == OnlineStatus.INVISIBLE) offline++;
+        }
+
+        if (online == 0 && dnd == 0) {
+            EmbedBuilder embed = new EmbedBuilder()
+                    .setTitle("Nenhum Moderador Disponivel")
+                    .setDescription("Nenhum moderador esta online ou com status nao perturbe no momento.")
+                    .addField("Status dos Moderadores", "- Online: " + online + " - Nao Perturbe: " + dnd + " - Offline/Ausente: " + offline, false)
+                    .setColor(0xffa500)
+                    .setTimestamp();
+
+            event.replyEmbeds(embed.build()).setEphemeral(true).queue();
+            return;
+        }
+
+        String mention = buildSupportMention(event);
+        if (mention.isEmpty()) {
             event.reply("Cargo de suporte nao configurado.")
                     .setEphemeral(true)
                     .queue();
             return;
         }
 
-        Role supportRole = event.getGuild() != null ? event.getGuild().getRoleById(SUPPORT_ROLE_ID) : null;
-        if (supportRole == null) {
-            event.reply("Cargo de suporte nao encontrado.")
-                    .setEphemeral(true)
-                    .queue();
-            return;
-        }
-
-        event.getChannel().sendMessage(supportRole.getAsMention() + " - Novo ticket aguardando atendimento.").queue();
+        event.getChannel().sendMessage(mention + " - Novo ticket aguardando atendimento.").queue();
         event.reply("Suporte chamado.").setEphemeral(true).queue();
     }
 
     private boolean isTicketOwner(TextChannel channel, String userId) {
         String topic = channel.getTopic();
         return topic != null && topic.contains("ticket_owner:" + userId);
+    }
+
+    private boolean hasSupportRole(Member member) {
+        if (member == null) return false;
+        for (Role role : member.getRoles()) {
+            if (isSupportRoleId(role.getId())) return true;
+        }
+        return false;
+    }
+
+    private List<Role> getSupportRoles(ButtonInteractionEvent event) {
+        if (event.getGuild() == null) return Collections.emptyList();
+        Set<Role> roles = new HashSet<>();
+        for (String id : SUPPORT_ROLE_IDS) {
+            Role r = event.getGuild().getRoleById(id);
+            if (r != null) roles.add(r);
+        }
+        if (SUPPORT_ROLE_ID_ENV != null && !SUPPORT_ROLE_ID_ENV.isEmpty()) {
+            Role r = event.getGuild().getRoleById(SUPPORT_ROLE_ID_ENV);
+            if (r != null) roles.add(r);
+        }
+        return Arrays.asList(roles.toArray(new Role[0]));
+    }
+
+    private Set<Member> getSupportMembers(ButtonInteractionEvent event) {
+        Set<Member> members = new HashSet<>();
+        if (event.getGuild() == null) return members;
+        for (Role role : getSupportRoles(event)) {
+            members.addAll(event.getGuild().getMembersWithRoles(role));
+        }
+        return members;
+    }
+
+    private String buildSupportMention(ButtonInteractionEvent event) {
+        StringBuilder sb = new StringBuilder();
+        for (Role role : getSupportRoles(event)) {
+            if (sb.length() > 0) sb.append(" ");
+            sb.append(role.getAsMention());
+        }
+        return sb.toString();
     }
 
     private static String tipoNome(String tipo) {
@@ -460,9 +625,17 @@ Agora envie sua avaliacao:
     }
 
     private static String ticketCategoryLabel(String value) {
-        if ("bot".equals(value)) return "Duvida sobre o Bot";
-        if ("site".equals(value)) return "Problema no Site";
-        if ("pagamentos".equals(value)) return "Pagamentos/Planos";
+        if ("notificacoes".equals(value)) return "Problema com Notificacoes";
+        if ("duvida".equals(value)) return "Duvida sobre o Bot";
+        if ("login".equals(value)) return "Erro ao fazer login";
+        if ("produtos".equals(value)) return "Problema com Produtos";
         return "Outros";
+    }
+
+    private boolean isSupportRoleId(String id) {
+        for (String rid : SUPPORT_ROLE_IDS) {
+            if (rid.equals(id)) return true;
+        }
+        return SUPPORT_ROLE_ID_ENV != null && SUPPORT_ROLE_ID_ENV.equals(id);
     }
 }
