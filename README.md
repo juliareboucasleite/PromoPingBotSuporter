@@ -16,21 +16,13 @@ PromoPing allows users to track products across various online shops and receive
 
 ## Architecture
 
-PromoPing Bot Suporter was developed using the following technologies:
-- **Java 11+** - Main programming language
-- **JDA (Java Discord API)** - Library for Discord interaction
-- **Maven/Gradle** - Dependency management
+PromoPing Bot Suporter is developed using Java 11 or higher as the main programming language. It utilizes the JDA (Java Discord API) library for integrating with Discord, and dependency management is handled through either Maven or Gradle.
 
 ## Security
 
-The bot implements multiple layers of protection:
-- Permission validation for administrative commands
-- Command input sanitization
-- Structured logging and complete auditing
-- Protection of tokens and sensitive credentials
-- Proper exception handling
+The bot applies several layers of security protection. It validates permissions for all administrative commands and sanitizes command input to prevent misuse. Structured logging and complete auditing are implemented to ensure transparency and accountability. The system protects all tokens and sensitive credentials, and incorporates robust exception handling to minimize security risks.
 
-Security-related matters should be disclosed privately by contacting <corporation.promoping@gmail.com> and to report vulnerabilities, please consult [SECURITY.md](SECURITY.md).
+If you need to report a security issue or vulnerability, please contact <corporation.promoping@gmail.com> directly. For more details on reporting vulnerabilities, refer to [SECURITY.md](SECURITY.md).
 
 ## Contributing
 
