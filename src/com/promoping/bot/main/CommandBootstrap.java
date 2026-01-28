@@ -28,6 +28,7 @@ public class CommandBootstrap {
         CommandManager.register(new CommunityPanelCommand(accessControl));
         CommandManager.register(new SponsorPanelCommand(accessControl));
         CommandManager.register(new DbSchemaCommand(accessControl));
+        CommandManager.register(new TicketCommand(accessControl));
 
         CommandManager.register(new CountingCommand(new CountingDAO(), accessControl));
         CommandManager.register(new LockCommand(new ChannelService(), accessControl));
