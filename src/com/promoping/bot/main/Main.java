@@ -2,12 +2,15 @@ package com.promoping.bot.main;
 
 import com.promoping.bot.listeners.ButtonListener;
 import com.promoping.bot.listeners.MessageListener;
+import com.promoping.bot.services.BugResolvedWatcher;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import java.io.FileInputStream;
 import java.util.EnumSet;
 import java.util.Properties;
+import com.promoping.bot.listeners.ModalListener;
+
 
 public class Main {
 
@@ -20,9 +23,11 @@ public class Main {
                         GatewayIntent.MESSAGE_CONTENT,
                         GatewayIntent.GUILD_MEMBERS
                 ))
-                .addEventListeners(new MessageListener(), new ButtonListener())
+                .addEventListeners(new MessageListener(), new ButtonListener(),  new ModalListener())
                 .build()
                 .awaitReady();
+
+        new BugResolvedWatcher(jda).start();
 
         System.out.println("PromoPing Support Bot CONNECTED");
     }
