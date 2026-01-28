@@ -1,8 +1,8 @@
 package com.promoping.bot.comandos.general;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-// import net.dv8tion.jda.api.interactions.components.ActionRow; // Not available in this JDA version
-// import net.dv8tion.jda.api.interactions.components.buttons.Button; // Not available in this JDA version
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import com.promoping.bot.comandos.core.BaseCommand;
 import com.promoping.bot.utils.EmbedBuilder;
 
@@ -51,7 +51,8 @@ public class RulesCommand extends BaseCommand {
         if (logoUrl != null && !logoUrl.isEmpty()) {
             embed.setThumbnail(logoUrl);
         }        
-        event.getChannel().sendMessageEmbeds(embed.build())        // // .setComponents(ActionRow.of(...)) // Not available
+        event.getChannel().sendMessageEmbeds(embed.build())
+                .setComponents(ActionRow.of(Button.success("aceitar_regras_promoping", "Eu Li e Concordo")))
                 .queue();
     }
 }
