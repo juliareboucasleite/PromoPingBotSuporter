@@ -3,6 +3,8 @@ package com.promoping.bot.main;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -163,7 +165,33 @@ public class Bot extends ListenerAdapter {
         }
         
         if (event.getComponentId().equals("aceitar_regras_promoping")) {
-            event.reply("Obrigado por aceitar as regras!").setEphemeral(true).queue();
+            if (event.getGuild() == null) {
+                event.reply("Este botão só funciona dentro de um servidor.").setEphemeral(true).queue();
+                return;
+            }
+            
+            Member member = event.getMember();
+            if (member == null) {
+                event.reply("Não consegui identificar seu usuário no servidor.").setEphemeral(true).queue();
+                return;
+            }
+            
+            Role role = event.getGuild().getRoleById("1443627596565712978");
+            if (role == null) {
+                event.reply("Cargo não encontrado. Avise a equipe.").setEphemeral(true).queue();
+                return;
+            }
+            
+            if (member.getRoles().contains(role)) {
+                event.reply("Você já tem esse cargo.").setEphemeral(true).queue();
+                return;
+            }
+            
+            event.deferReply(true).queue();
+            event.getGuild().addRoleToMember(member, role).queue(
+                    success -> event.getHook().editOriginal("Cargo atribuído! Obrigado por aceitar as regras.").queue(),
+                    error -> event.getHook().editOriginal("Não consegui atribuir o cargo. Verifique as permissões do bot.").queue()
+            );
         }
     }
     
