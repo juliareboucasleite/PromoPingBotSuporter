@@ -1,24 +1,20 @@
 package com.promoping.bot.comandos.admin;
 
-import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-// import net.dv8tion.jda.api.utils.concurrent.Task; // Removed - use CompletableFuture instead
 import com.promoping.bot.comandos.core.BaseCommand;
 import com.promoping.bot.security.AccessControl;
 import com.promoping.bot.utils.EmbedBuilder;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
-/**
- * Fecha o ticket de suporte atual.
- */
+
 public class FecharTicketCommand extends BaseCommand {
     
     private static final String SUPPORT_ROLE_ID = System.getenv("DISCORD_SUPPORT_ROLE_ID");
