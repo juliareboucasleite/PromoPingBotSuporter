@@ -141,7 +141,9 @@ public class ButtonListener extends ListenerAdapter {
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setTitle("Anonimato")
-                .setDescription("Voce esta avaliando: **" + tipoNome(tipo) + "**\n\nDeseja que sua avaliacao seja anonima?")
+                .setDescription("Voce esta avaliando: **" + tipoNome(tipo) + "**
+
+Deseja que sua avaliacao seja anonima?")
                 .setColor(0x5865F2);
 
         event.replyEmbeds(embed.build())
@@ -196,7 +198,10 @@ public class ButtonListener extends ListenerAdapter {
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setTitle("Avaliacao")
-                .setDescription("Nota selecionada: " + rating + "/5\n\nAgora envie sua avaliacao:\n`!review-texto <sua avaliacao>`")
+                .setDescription("Nota selecionada: " + rating + "/5
+
+Agora envie sua avaliacao:
+`!review-texto <sua avaliacao>`")
                 .setColor(0x00ff00);
 
         event.replyEmbeds(embed.build())
@@ -356,7 +361,9 @@ public class ButtonListener extends ListenerAdapter {
 
         EmbedBuilder confirm = new EmbedBuilder()
                 .setTitle("Confirmar Criacao do Ticket")
-                .setDescription("Categoria selecionada: **" + categoriaLabel + "** Clique em Confirmar para criar o ticket.")
+                .setDescription("Categoria selecionada: **" + categoriaLabel + "**
+
+Clique em Confirmar para criar o ticket.")
                 .setColor(0x00ff00)
                 .setTimestamp();
 
@@ -414,11 +421,17 @@ public class ButtonListener extends ListenerAdapter {
 
                     EmbedBuilder embed = new EmbedBuilder()
                             .setTitle("Ticket de Suporte Criado")
-                            .setDescription("**Ticket criado por:** " + event.getUser().getAsMention() + " " +
-                                    "**Categoria:** " + categoriaLabel + " " +
-                                    "**Informacoes** " +
-                                    "- Um membro da equipe de suporte respondera em breve" +
-                                    "- Descreva seu problema com detalhes" +
+                            .setDescription("**Ticket criado por:** " + event.getUser().getAsMention() + "
+" +
+                                    "**Categoria:** " + categoriaLabel + "
+
+" +
+                                    "**Informacoes**
+" +
+                                    "- Um membro da equipe de suporte respondera em breve
+" +
+                                    "- Descreva seu problema com detalhes
+" +
                                     "- Use os botoes abaixo para gerenciar o ticket")
                             .setColor(0x00ff00)
                             .setTimestamp()
@@ -433,8 +446,12 @@ public class ButtonListener extends ListenerAdapter {
 
                     EmbedBuilder success = new EmbedBuilder()
                             .setTitle("Ticket Criado com Sucesso!")
-                            .setDescription("Seu ticket foi criado: " + channel.getAsMention() + " " +
-                                    "**Categoria:** " + categoriaLabel + " " +
+                            .setDescription("Seu ticket foi criado: " + channel.getAsMention() + "
+
+" +
+                                    "**Categoria:** " + categoriaLabel + "
+
+" +
                                     "Clique no canal acima para acessa-lo.")
                             .setColor(0x00ff00)
                             .setTimestamp();
@@ -553,7 +570,9 @@ public class ButtonListener extends ListenerAdapter {
             EmbedBuilder embed = new EmbedBuilder()
                     .setTitle("Nenhum Moderador Disponivel")
                     .setDescription("Nenhum moderador esta online ou com status nao perturbe no momento.")
-                    .addField("Status dos Moderadores", "- Online: " + online + " - Nao Perturbe: " + dnd + " - Offline/Ausente: " + offline, false)
+                    .addField("Status dos Moderadores", "- Online: " + online + "
+- Nao Perturbe: " + dnd + "
+- Offline/Ausente: " + offline, false)
                     .setColor(0xffa500)
                     .setTimestamp();
 
