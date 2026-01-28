@@ -2,8 +2,8 @@ package com.promoping.bot.comandos.admin;
 
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-// import net.dv8tion.jda.api.interactions.components.ActionRow; // Not available in this JDA version
-// import net.dv8tion.jda.api.interactions.components.buttons.Button; // Not available in this JDA version
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import com.promoping.bot.comandos.core.BaseCommand;
 import com.promoping.bot.security.AccessControl;
 import com.promoping.bot.utils.EmbedBuilder;
@@ -87,7 +87,8 @@ public class ReviewPanelCommand extends BaseCommand {
                 .addField("Comandos Disponíveis", "`!review` - Iniciar avaliação\n`/review` - Iniciar avaliação (slash command)", false)
                 .setTimestamp()
                 .setFooter("©PromoPing • Todos os direitos reservados");        
-        targetChannel.sendMessageEmbeds(reviewPanelEmbed.build())        // // .setComponents(ActionRow.of(...)) // Not available
+        targetChannel.sendMessageEmbeds(reviewPanelEmbed.build())
+                .setComponents(ActionRow.of(Button.primary("review_start", "Deixar Avaliacao")))
                 .queue();
         
         EmbedBuilder confirmEmbed = new EmbedBuilder()
