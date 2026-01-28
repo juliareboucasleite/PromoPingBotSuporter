@@ -2,8 +2,8 @@ package com.promoping.bot.comandos.admin;
 
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-// import net.dv8tion.jda.api.interactions.components.ActionRow; // Not available in this JDA version
-// import net.dv8tion.jda.api.interactions.components.buttons.Button; // Not available in this JDA version
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import com.promoping.bot.comandos.core.BaseCommand;
 import com.promoping.bot.security.AccessControl;
 import com.promoping.bot.utils.EmbedBuilder;
@@ -98,7 +98,12 @@ public class InvitePanelCommand extends BaseCommand {
                 .setThumbnail(event.getJDA().getSelfUser().getAvatarUrl())
                 .setTimestamp()
                 .setFooter("©PromoPing • Todos os direitos reservados");        
-        targetChannel.sendMessageEmbeds(invitePanelEmbed.build())        // // .setComponents(ActionRow.of(...)) // Not available
+        targetChannel.sendMessageEmbeds(invitePanelEmbed.build())
+                .setComponents(ActionRow.of(
+                        Button.link(inviteUrl, "Entrar no Servidor"),
+                        Button.link(siteUrl, "Acessar Site"),
+                        Button.link(botInviteUrl, "Adicionar Bot")
+                ))
                 .queue();
         
         EmbedBuilder confirmEmbed = new EmbedBuilder()
