@@ -451,7 +451,7 @@ public class ButtonListener extends ListenerAdapter {
     private TextChannel findExistingTicket(List<TextChannel> channels, String userId) {
         for (TextChannel ch : channels) {
             String topic = ch.getTopic();
-            if (topic != null && topic.contains("ticket_owner: " + userId)) {
+            if (topic != null && topic.contains("ticket_owner:" + userId)) {
                 return ch;
             }
         }
@@ -474,12 +474,12 @@ public class ButtonListener extends ListenerAdapter {
         String clean = username.toLowerCase().replaceAll("[^a-z0-9]", "");
         if (clean.isEmpty()) clean = userId.substring(0, 4);
         String suffix = userId.length() > 4 ? userId.substring(userId.length() - 4) : userId;
-        return "ticket- " + clean + "-" + suffix;
+        return "ticket-" + clean + "-" + suffix;
     }
 
     private void confirmCloseTicket(ButtonInteractionEvent event) {
         TextChannel channel = event.getChannel().asTextChannel();
-        if (!channel.getName().startsWith("ticket- ")) {
+        if (!isTicketChannel(channel)) {
             event.reply("Este botao so funciona em canais de ticket.")
                     .setEphemeral(true)
                     .queue();
@@ -503,7 +503,7 @@ public class ButtonListener extends ListenerAdapter {
 
     private void closeTicket(ButtonInteractionEvent event) {
         TextChannel channel = event.getChannel().asTextChannel();
-        if (!channel.getName().startsWith("ticket-")) {
+        if (!isTicketChannel(channel)) {
             event.reply("Este botao so funciona em canais de ticket.")
                     .setEphemeral(true)
                     .queue();
@@ -534,7 +534,13 @@ public class ButtonListener extends ListenerAdapter {
                 .setFooter("PromoPing - Suporte");
 
         channel.sendMessageEmbeds(closeEmbed.build()).queue();
-        channel.delete().queueAfter(10, TimeUnit.SECONDS);
+        Category parent = channel.getParentCategory();
+        channel.delete().queueAfter(10, TimeUnit.SECONDS, success -> {
+            if (parent != null && parent.getTextChannels().isEmpty()) {
+                parent.delete().queue();
+            }
+        }, error -> {
+        });
     }
 
     private void callSupport(ButtonInteractionEvent event) {
@@ -576,7 +582,15 @@ public class ButtonListener extends ListenerAdapter {
 
     private boolean isTicketOwner(TextChannel channel, String userId) {
         String topic = channel.getTopic();
-        return topic != null && topic.contains("ticket_owner: " + userId);
+        return topic != null && topic.contains("ticket_owner:" + userId);
+    }
+
+    private boolean isTicketChannel(TextChannel channel) {
+        if (channel.getName().startsWith("ticket-")) return true;
+        String topic = channel.getTopic();
+        if (topic != null && topic.contains("ticket_owner:")) return true;
+        Category parent = channel.getParentCategory();
+        return parent != null && parent.getName().equalsIgnoreCase(TICKETS_CATEGORY_NAME);
     }
 
     private boolean hasSupportRole(Member member) {
