@@ -10,6 +10,11 @@ public class Status implements Command {
     }
 
     @Override
+    public String[] getAliases() {
+        return new String[] { "health", "estado" };
+    }
+
+    @Override
     public String getDescription() {
         return "Mostra o estado do sistema";
     }
@@ -20,9 +25,14 @@ public class Status implements Command {
     }
 
     @Override
-    public void execute(MessageReceivedEvent event) {
-        event.getChannel().sendMessage(
-                "Status: ONLINE\nAPI: OK"
-        ).queue();
+    public boolean adminOnly() {
+        return false;
+    }
+
+    @Override
+    public void execute(MessageReceivedEvent event, String[] args) {
+        event.getChannel()
+                .sendMessage("Status: ONLINE\nAPI: OK")
+                .queue();
     }
 }
