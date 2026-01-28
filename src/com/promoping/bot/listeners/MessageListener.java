@@ -1,7 +1,7 @@
 package com.promoping.bot.listeners;
 
-import com.promoping.bot.comandos.Command;
-import com.promoping.bot.comandos.CommandManager;
+import com.promoping.bot.comandos.core.Command;
+import com.promoping.bot.comandos.core.CommandManager;
 import com.promoping.bot.security.AccessControl;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
