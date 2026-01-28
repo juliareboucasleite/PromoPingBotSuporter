@@ -1,6 +1,6 @@
 [![Version](https://img.shields.io/badge/Version-Bot%20Suporter-blue.svg)](https://github.com/juliareboucasleite/PromoPing)
 [![LICENSE](https://img.shields.io/badge/LICENSE-GPL--2.0-blue.svg)](LICENSE)
-[![Java](https://img.shields.io/badge/Java-11+-green.svg)](https://www.oracle.com/java/)
+[![Java](https://img.shields.io/badge/Java-8+-green.svg)](https://www.oracle.com/java/)
 [![JDA](https://img.shields.io/badge/JDA-Latest-orange.svg)](https://github.com/DV8FromTheWorld/JDA)
 [![Site](https://img.shields.io/badge/site-Promoping.pt-brightgreen?logo=Google-Chrome&logoColor=white&label=Site)](http://promoping.pt/)
 
@@ -16,7 +16,7 @@ PromoPing allows users to track products across various online shops and receive
 
 ## Architecture
 
-PromoPing Bot Suporter is developed using Java 11 or higher as the main programming language. It utilizes the JDA (Java Discord API) library for integrating with Discord, and dependency management is handled through either Maven or Gradle.
+PromoPing Bot Suporter is developed using Java 8 or higher as the main programming language. It utilizes the JDA (Java Discord API) library for integrating with Discord, and dependency management is handled through either Maven or Gradle.
 
 ## Security
 
