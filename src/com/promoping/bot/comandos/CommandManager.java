@@ -10,7 +10,12 @@ public class CommandManager {
 
     public static void register(Command command) {
         COMMANDS.put(command.getName(), command);
+
+        for (String alias : command.getAliases()) {
+            COMMANDS.put(alias, command);
+        }
     }
+
 
     public static Command get(String name) {
         return COMMANDS.get(name);
@@ -19,4 +24,5 @@ public class CommandManager {
     public static Collection<Command> all() {
         return COMMANDS.values();
     }
+
 }
