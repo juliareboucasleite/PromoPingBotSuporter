@@ -19,6 +19,7 @@ import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.interactions.modals.Modal;
 
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -312,11 +313,11 @@ public class ButtonListener extends ListenerAdapter {
 
         TextChannel existing = findExistingTicket(event.getGuild().getTextChannels(), event.getUser().getId());
         if (existing != null) {
-            EmbedBuilder embed = new EmbedBuilder()
-                    .setTitle("Ticket Ja Existe")
-                    .setDescription("Voce ja tem um ticket aberto: " + existing.getAsMention())
-                    .setColor(0xffa500)
-                    .setTimestamp();
+                EmbedBuilder embed = new EmbedBuilder()
+                        .setTitle("Ticket Ja Existe")
+                        .setDescription("Voce ja tem um ticket aberto: " + existing.getAsMention())
+                        .setColor(0xffa500)
+                        .setTimestamp(OffsetDateTime.now());
 
             event.replyEmbeds(embed.build()).setEphemeral(true).queue();
             return;
@@ -335,7 +336,7 @@ public class ButtonListener extends ListenerAdapter {
                 .setTitle("Escolha a Categoria do Ticket")
                 .setDescription("Selecione a categoria que melhor descreve seu problema.")
                 .setColor(0x5865F2)
-                .setTimestamp();
+                .setTimestamp(OffsetDateTime.now());
 
         event.replyEmbeds(embed.build())
                 .setEphemeral(true)
@@ -358,7 +359,7 @@ public class ButtonListener extends ListenerAdapter {
                 .setTitle("Confirmar Criacao do Ticket")
                 .setDescription("Categoria selecionada: **" + categoriaLabel + "**\n\nClique em Confirmar para criar o ticket.")
                 .setColor(0x00ff00)
-                .setTimestamp();
+                .setTimestamp(OffsetDateTime.now());
 
         Button confirmar = Button.success("ticket_confirm_" + categoria, "Confirmar");
         Button cancelar = Button.danger("ticket_cancel", "Cancelar");
@@ -385,7 +386,7 @@ public class ButtonListener extends ListenerAdapter {
                     .setTitle("Ticket Ja Existe")
                     .setDescription("Voce ja tem um ticket aberto: " + existing.getAsMention())
                     .setColor(0xffa500)
-                    .setTimestamp();
+                    .setTimestamp(OffsetDateTime.now());
 
             event.replyEmbeds(embed.build()).setEphemeral(true).queue();
             return;
@@ -421,7 +422,7 @@ public class ButtonListener extends ListenerAdapter {
                                     "- Descreva seu problema com detalhes\n" +
                                     "- Use os botoes abaixo para gerenciar o ticket")
                             .setColor(0x00ff00)
-                            .setTimestamp()
+                            .setTimestamp(OffsetDateTime.now())
                             .setFooter("PromoPing - Suporte");
 
                     Button fecharBtn = Button.danger("ticket_close", "Fechar Ticket");
@@ -437,7 +438,7 @@ public class ButtonListener extends ListenerAdapter {
                                     "**Categoria:** " + categoriaLabel + "\n\n" +
                                     "Clique no canal acima para acessa-lo.")
                             .setColor(0x00ff00)
-                            .setTimestamp();
+                            .setTimestamp(OffsetDateTime.now());
 
                     event.replyEmbeds(success.build())
                             .setEphemeral(true)
@@ -489,7 +490,7 @@ public class ButtonListener extends ListenerAdapter {
                 .setTitle("Confirmar Fechamento")
                 .setDescription("Tem certeza que deseja fechar este ticket?")
                 .setColor(0xffa500)
-                .setTimestamp();
+                .setTimestamp(OffsetDateTime.now());
 
         Button sim = Button.danger("ticket_close_confirm", "Sim, Fechar");
         Button nao = Button.secondary("ticket_close_cancel", "Cancelar");
@@ -529,7 +530,7 @@ public class ButtonListener extends ListenerAdapter {
                 .setDescription("Este ticket foi fechado por " + event.getUser().getAsMention())
                 .addField("Informacao", "O canal sera deletado em 10 segundos.", false)
                 .setColor(0xff0000)
-                .setTimestamp()
+                .setTimestamp(OffsetDateTime.now())
                 .setFooter("PromoPing - Suporte");
 
         channel.sendMessageEmbeds(closeEmbed.build()).queue();
@@ -555,7 +556,7 @@ public class ButtonListener extends ListenerAdapter {
                     .setDescription("Nenhum moderador esta online ou com status nao perturbe no momento.")
                     .addField("Status dos Moderadores", "- Online: " + online + "\n- Nao Perturbe: " + dnd + "\n- Offline/Ausente: " + offline, false)
                     .setColor(0xffa500)
-                    .setTimestamp();
+                    .setTimestamp(OffsetDateTime.now());
 
             event.replyEmbeds(embed.build()).setEphemeral(true).queue();
             return;
