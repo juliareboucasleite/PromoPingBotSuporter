@@ -10,6 +10,11 @@ public class Ping implements Command {
     }
 
     @Override
+    public String[] getAliases() {
+        return new String[] { "p" };
+    }
+
+    @Override
     public String getDescription() {
         return "Responde com pong";
     }
@@ -20,7 +25,12 @@ public class Ping implements Command {
     }
 
     @Override
-    public void execute(MessageReceivedEvent event) {
+    public boolean adminOnly() {
+        return false;
+    }
+
+    @Override
+    public void execute(MessageReceivedEvent event, String[] args) {
         event.getChannel().sendMessage("Pong!").queue();
     }
 }
