@@ -15,40 +15,26 @@ public class CommandBootstrap {
 
         AccessControl accessControl = new AccessControl();
 
-        Database database = new Database();
-
-        ReviewDAO reviewDAO = new ReviewDAO(database);
-        CountingDAO countingDAO = new CountingDAO(database);
-
-        TicketService ticketService = new TicketService(database);
-        ChannelService channelService = new ChannelService();
-        StatusService statusService = new StatusService();
-
         CommandManager.register(new Help());
-        CommandManager.register(new StatusCommand(statusService));
-
-        CommandManager.register(new ReviewCommand(reviewDAO));
-        CommandManager.register(new SuporteCommand(ticketService));
-
+        CommandManager.register(new StatusCommand(new StatusService()));
+        CommandManager.register(new ReviewCommand(new ReviewDAO()));
+        CommandManager.register(new ReviewTextoCommand(new ReviewDAO()));
+        CommandManager.register(new SuporteCommand());
         CommandManager.register(new RulesCommand());
         CommandManager.register(new ReportarCommand());
         CommandManager.register(new SugerirCommand());
-
-        CommandManager.register(new CountingCommand(countingDAO, accessControl));
-
-        CommandManager.register(new LockCommand(channelService, accessControl));
-        CommandManager.register(new UnlockCommand(channelService, accessControl));
-
-        CommandManager.register(new SetupTicketCommand(ticketService, accessControl));
-        CommandManager.register(new FecharTicketCommand(ticketService, accessControl));
-
-        CommandManager.register(new SetupBugCommand(accessControl));
-        CommandManager.register(new SetupSugestaoCommand(accessControl));
-        CommandManager.register(new InvitePanelCommand(accessControl));
         CommandManager.register(new ReviewPanelCommand(accessControl));
+        CommandManager.register(new InvitePanelCommand(accessControl));
+        CommandManager.register(new CommunityPanelCommand(accessControl));
+        CommandManager.register(new SponsorPanelCommand(accessControl));
+        CommandManager.register(new DbSchemaCommand(accessControl));
+
+        CommandManager.register(new CountingCommand(new CountingDAO(), accessControl));
+        CommandManager.register(new LockCommand(new ChannelService(), accessControl));
+        CommandManager.register(new UnlockCommand(new ChannelService(), accessControl));
+
+        CommandManager.register(new FecharTicketCommand(accessControl));
 
         System.out.println("Comandos registados");
     }
 }
-
-
