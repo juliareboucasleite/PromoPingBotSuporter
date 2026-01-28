@@ -1,6 +1,9 @@
 package com.promoping.bot.main;
 
-import com.promoping.bot.comandos.*;
+import com.promoping.bot.comandos.core.CommandManager;
+import com.promoping.bot.comandos.general.Help;
+import com.promoping.bot.comandos.system.Counting;
+import com.promoping.bot.comandos.system.Status;
 import com.promoping.bot.listeners.MessageListener;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
