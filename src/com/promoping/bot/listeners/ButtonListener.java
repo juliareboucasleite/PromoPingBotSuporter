@@ -23,12 +23,14 @@ public class ButtonListener extends ListenerAdapter {
 
             case "abrir_formulario_bug":
                 event.reply("🐛 Formulário de bug em breve.")
-                        .setEphemeral(true).queue();
+                        .setEphemeral(true)
+                        .queue();
                 break;
 
             case "abrir_ticket_promoping":
                 event.reply("🎫 Criando ticket...")
-                        .setEphemeral(true).queue();
+                        .setEphemeral(true)
+                        .queue();
                 break;
         }
     }
