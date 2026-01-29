@@ -31,3 +31,4 @@ bin/
 
 ### a parte do env
 config.properties
+target/classes/com/promoping/bot/main/Main.class
