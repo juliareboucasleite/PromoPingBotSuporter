@@ -23,6 +23,7 @@ public class CommandBootstrap {
         CommandManager.register(new RulesCommand());
         CommandManager.register(new ReportarCommand());
         CommandManager.register(new SugerirCommand());
+        CommandManager.register(new CupomCommand());
         CommandManager.register(new ReviewPanelCommand(accessControl));
         CommandManager.register(new InvitePanelCommand(accessControl));
         CommandManager.register(new CommunityPanelCommand(accessControl));
