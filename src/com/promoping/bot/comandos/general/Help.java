@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,7 +107,7 @@ public class Help implements Command {
         Button anterior = Button.secondary(prevId, "◀ Anterior").withDisabled(currentPage <= 0);
         Button proximo = Button.secondary(nextId, "Próximo ▶").withDisabled(currentPage >= totalPages - 1);
         Button fechar = Button.danger("help_close", "Fechar");
-        return List.of(anterior, proximo, fechar);
+        return Arrays.asList(anterior, proximo, fechar);
     }
 
     @Override
