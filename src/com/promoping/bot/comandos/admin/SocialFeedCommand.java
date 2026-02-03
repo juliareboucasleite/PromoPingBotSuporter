@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import com.promoping.bot.comandos.core.BaseCommand;
 import com.promoping.bot.dao.TwitchChannelDAO;
 import com.promoping.bot.security.AccessControl;
+import com.promoping.bot.utils.BotConfig;
 import com.promoping.bot.utils.EmbedBuilder;
 
 import java.text.SimpleDateFormat;
@@ -56,6 +57,7 @@ public class SocialFeedCommand extends BaseCommand {
         
         String action = args.length > 0 ? args[0].toLowerCase() : "listar";
         MessageChannel channel = event.getChannel();
+        String prefix = BotConfig.getPrefix();
         
         TextChannel socialFeedChannel = event.getJDA().getTextChannelById(SOCIAL_FEED_CHANNEL_ID);
         if (socialFeedChannel == null) {
@@ -95,7 +97,7 @@ public class SocialFeedCommand extends BaseCommand {
                 
             } else if (action.equals("adicionar") || action.equals("add")) {
                 if (args.length < 2) {
-                    channel.sendMessage("Por favor, forneça o nome do canal da Twitch ou a URL.\n**Uso:** `!social-feed adicionar <nome-do-canal>` ou `!social-feed adicionar https://twitch.tv/nome-do-canal`")
+                    channel.sendMessage("Por favor, forneça o nome do canal da Twitch ou a URL.\n**Uso:** `" + prefix + "social-feed adicionar <nome-do-canal>` ou `" + prefix + "social-feed adicionar https://twitch.tv/nome-do-canal`")
                             .queue();
                     return;
                 }
@@ -133,7 +135,7 @@ public class SocialFeedCommand extends BaseCommand {
                 
             } else if (action.equals("remover") || action.equals("remove") || action.equals("rem")) {
                 if (args.length < 2) {
-                    channel.sendMessage("Por favor, forneça o nome do canal da Twitch ou a URL.\n**Uso:** `!social-feed remover <nome-do-canal>`")
+                    channel.sendMessage("Por favor, forneça o nome do canal da Twitch ou a URL.\n**Uso:** `" + prefix + "social-feed remover <nome-do-canal>`")
                             .queue();
                     return;
                 }
@@ -177,7 +179,7 @@ public class SocialFeedCommand extends BaseCommand {
                         "• `remover <canal>` - Remove um canal\n" +
                         "• `verificar` - Força verificação imediata\n" +
                         "• `testar` - Envia uma notificação de teste\n\n" +
-                        "**Exemplo:** `!social-feed verificar`"
+                        "**Exemplo:** `" + prefix + "social-feed verificar`"
                 ).queue();
             }
             

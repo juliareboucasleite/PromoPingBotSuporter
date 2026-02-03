@@ -2,6 +2,7 @@ package com.promoping.bot.comandos.general;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import com.promoping.bot.comandos.core.BaseCommand;
+import com.promoping.bot.utils.BotConfig;
 import com.promoping.bot.utils.EmbedBuilder;
 
 import java.util.Arrays;
@@ -29,6 +30,7 @@ public class SuporteCommand extends BaseCommand {
     
     @Override
     public void execute(MessageReceivedEvent event, String[] args) {
+        String prefix = BotConfig.getPrefix();
         // Se for mensagem privada (DM), criar ticket
         if (event.getGuild() == null) {
             if (args.length == 0) {
@@ -40,8 +42,8 @@ public class SuporteCommand extends BaseCommand {
                                 "`/suporte mensagem: Preciso de ajuda com notificações`\n" +
                                 "`/suporte mensagem: Tenho um problema ao fazer login`\n\n" +
                                 "**Exemplos com comando de texto:**\n" +
-                                "`!suporte Preciso de ajuda com notificações`\n" +
-                                "`!suporte Tenho um problema ao fazer login`"
+                                "`" + prefix + "suporte Preciso de ajuda com notificações`\n" +
+                                "`" + prefix + "suporte Tenho um problema ao fazer login`"
                         )
                         .setColor(0x5865F2)
                         .setTimestamp()
@@ -62,16 +64,16 @@ public class SuporteCommand extends BaseCommand {
                 .setDescription(
                         "**Como criar um ticket via mensagem privada:**\n\n" +
                         "1. Envie uma mensagem privada para este bot\n" +
-                        "2. Use o comando `/suporte` ou `!suporte` seguido da sua dúvida ou problema\n" +
+                        "2. Use o comando `/suporte` ou `" + prefix + "suporte` seguido da sua dúvida ou problema\n" +
                         "3. Um ticket será criado automaticamente no servidor\n" +
                         "4. Nossa equipe de suporte responderá o mais breve possível\n\n" +
                         "**Exemplos com slash command:**\n" +
                         "`/suporte mensagem: Preciso de ajuda com notificações`\n\n" +
                         "**Exemplos com comando de texto:**\n" +
-                        "`!suporte Preciso de ajuda com notificações`\n" +
-                        "`!suporte Tenho um problema ao fazer login`"
+                        "`" + prefix + "suporte Preciso de ajuda com notificações`\n" +
+                        "`" + prefix + "suporte Tenho um problema ao fazer login`"
                 )
-                .addField("Dica", "Você também pode usar `/ticket` ou `!ticket` no privado do bot para criar um ticket.", false)
+                .addField("Dica", "Você também pode usar `/ticket` ou `" + prefix + "ticket` no privado do bot para criar um ticket.", false)
                 .setColor(0x5865F2)
                 .setTimestamp()
                 .setFooter("©PromoPing • Todos os direitos reservados");

@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 // import net.dv8tion.jda.api.interactions.components.buttons.Button; // Not available in this JDA version
 import com.promoping.bot.comandos.core.BaseCommand;
 import com.promoping.bot.security.AccessControl;
+import com.promoping.bot.utils.BotConfig;
 import com.promoping.bot.utils.EmbedBuilder;
 
 import java.util.Arrays;
@@ -43,6 +44,7 @@ public class SetupBugCommand extends BaseCommand {
             event.getChannel().sendMessage("Este comando só pode ser usado em um servidor!").queue();
             return;
         }
+        String prefix = BotConfig.getPrefix();
         
         if (!accessControl.isAdmin(event.getMember())) {
             EmbedBuilder embed = new EmbedBuilder()
@@ -65,7 +67,7 @@ public class SetupBugCommand extends BaseCommand {
             if (mentionedChannel != null) {
                 targetChannel = mentionedChannel;
             } else {
-                event.getChannel().sendMessage("Canal inválido! Mencione um canal de texto válido ou use o comando no canal desejado.\n**Exemplo:** `!setup-bug #reportar-bugs`")
+                event.getChannel().sendMessage("Canal inválido! Mencione um canal de texto válido ou use o comando no canal desejado.\n**Exemplo:** `" + prefix + "setup-bug #reportar-bugs`")
                         .queue();
                 return;
             }

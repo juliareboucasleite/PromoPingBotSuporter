@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 // import net.dv8tion.jda.api.interactions.components.buttons.Button; // Not available in this JDA version
 import com.promoping.bot.comandos.core.BaseCommand;
 import com.promoping.bot.security.AccessControl;
+import com.promoping.bot.utils.BotConfig;
 import com.promoping.bot.utils.EmbedBuilder;
 
 import java.util.Arrays;
@@ -55,17 +56,18 @@ public class SetupSugestaoCommand extends BaseCommand {
             return;
         }
         
-        TextChannel targetChannel = event.getChannel().asTextChannel();
-        
+TextChannel targetChannel = event.getChannel().asTextChannel();
+        String prefix = BotConfig.getPrefix();
+
         if (args.length > 0) {
             String channelMention = args[0];
             String channelId = channelMention.replaceAll("[<#>]", "");
-            
+
             TextChannel mentionedChannel = event.getGuild().getTextChannelById(channelId);
             if (mentionedChannel != null) {
                 targetChannel = mentionedChannel;
             } else {
-                event.getChannel().sendMessage("Canal inválido! Mencione um canal de texto válido ou use o comando no canal desejado.\n**Exemplo:** `!setup-sugestao #sugestoes`")
+                event.getChannel().sendMessage("Canal inválido! Mencione um canal de texto válido ou use o comando no canal desejado.\n**Exemplo:** `" + prefix + "setup-sugestao #sugestoes`")
                         .queue();
                 return;
             }

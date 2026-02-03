@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import com.promoping.bot.comandos.core.BaseCommand;
 import com.promoping.bot.security.AccessControl;
+import com.promoping.bot.utils.BotConfig;
 import com.promoping.bot.utils.EmbedBuilder;
 
 import java.util.Arrays;
@@ -56,6 +57,7 @@ public class TicketCommand extends BaseCommand {
         }
 
         TextChannel targetChannel = event.getChannel().asTextChannel();
+        String prefix = BotConfig.getPrefix();
 
         if (args.length > 0) {
             String channelMention = args[0];
@@ -65,7 +67,7 @@ public class TicketCommand extends BaseCommand {
             if (mentionedChannel != null) {
                 targetChannel = mentionedChannel;
             } else {
-                event.getChannel().sendMessage("Canal invalido! Mencione um canal de texto valido ou use o comando no canal desejado.\\n**Exemplo:** `!ticket #suporte`")
+                event.getChannel().sendMessage("Canal invalido! Mencione um canal de texto valido ou use o comando no canal desejado.\n**Exemplo:** `" + prefix + "ticket #suporte`")
                         .queue();
                 return;
             }

@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import com.promoping.bot.comandos.core.BaseCommand;
+import com.promoping.bot.utils.BotConfig;
 import com.promoping.bot.utils.EmbedBuilder;
 
 import java.util.Arrays;
@@ -31,6 +32,7 @@ public class RulesCommand extends BaseCommand {
     
     @Override
     public void execute(MessageReceivedEvent event, String[] args) {
+        String prefix = BotConfig.getPrefix();
         String rulesContent = 
                 "1. **Respeite todos os usuários.** Não serão toleradas ofensas, racismo, ou preconceitos de qualquer natureza.\n" +
                 "2. **Não faça spam.** Evite enviar mensagens repetidas ou anúncios não autorizados.\n" +
@@ -38,7 +40,7 @@ public class RulesCommand extends BaseCommand {
                 "4. **Não tente explorar falhas do bot.** Vulnerabilidades devem ser reportadas à equipe.\n" +
                 "5. **Não compartilhe informações pessoais ou sensíveis no Discord.**\n" +
                 "6. **Siga os Termos de Uso** do PromoPing e do Discord.\n" +
-                "7. **Dúvidas ou problemas:** Abra um ticket pelo comando `!suporte` no privado do bot ou nesse canal <#1442960813563449516>.";
+                "7. **Dúvidas ou problemas:** Abra um ticket pelo comando `" + prefix + "suporte` no privado do bot ou nesse canal <#1442960813563449516>.";
         
         EmbedBuilder embed = new EmbedBuilder()
                 .setTitle("Regras do PromoPing")

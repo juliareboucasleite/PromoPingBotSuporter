@@ -1,11 +1,14 @@
 package com.promoping.bot.listeners;
 
+import com.promoping.bot.comandos.general.Help;
 import com.promoping.bot.services.ReviewSessionStore;
 import com.promoping.bot.services.ReviewSessionStore.ReviewSession;
+import com.promoping.bot.utils.BotConfig;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -60,6 +63,11 @@ public class ButtonListener extends ListenerAdapter {
 
         if (componentId.startsWith("ticket_confirm_")) {
             handleTicketConfirm(event, componentId.substring("ticket_confirm_".length()));
+            return;
+        }
+
+        if (componentId.startsWith("help_")) {
+            handleHelpNavigation(event, componentId);
             return;
         }
 
@@ -128,10 +136,53 @@ public class ButtonListener extends ListenerAdapter {
         }
     }
 
+    private void handleHelpNavigation(ButtonInteractionEvent event, String componentId) {
+        if (componentId.equals("help_close")) {
+            event.deferEdit().queue();
+            event.getHook().editOriginal("Menu de ajuda fechado.")
+                    .setComponents()
+                    .queue();
+            return;
+        }
+        // help_prev_<page>_<total> ou help_next_<page>_<total>
+        String rest = componentId.startsWith("help_prev_") ? componentId.substring("help_prev_".length())
+                : componentId.substring("help_next_".length());
+        String[] parts = rest.split("_");
+        if (parts.length != 2) return;
+        int currentPage;
+        int totalPages;
+        try {
+            currentPage = Integer.parseInt(parts[0]);
+            totalPages = Integer.parseInt(parts[1]);
+        } catch (NumberFormatException e) {
+            return;
+        }
+        int newPage = componentId.startsWith("help_prev_")
+                ? Math.max(0, currentPage - 1)
+                : Math.min(totalPages - 1, currentPage + 1);
+        if (newPage == currentPage) return;
+
+        String prefix = BotConfig.getPrefix();
+        List<MessageEmbed> pages = Help.buildPages(prefix);
+        if (newPage < 0 || newPage >= pages.size()) return;
+
+        MessageEmbed pageEmbed = pages.get(newPage);
+        EmbedBuilder withFooter = new EmbedBuilder()
+                .setTitle(pageEmbed.getTitle())
+                .setDescription(pageEmbed.getDescription())
+                .setColor(pageEmbed.getColor() != null ? pageEmbed.getColor().getRGB() : 0x5865F2)
+                .setFooter("Página " + (newPage + 1) + " de " + totalPages + " • PromoPing - Ajuda");
+
+        event.deferEdit().queue();
+        event.getHook().editOriginalEmbeds(withFooter.build())
+                .setComponents(ActionRow.of(Help.buildNavButtons(newPage, totalPages)))
+                .queue();
+    }
+
     private void handleReviewTipoSelect(StringSelectInteractionEvent event) {
         ReviewSession session = ReviewSessionStore.getSession(event.getUser().getId(), event.getChannel().getId());
         if (session == null) {
-            event.reply("Inicie sua avaliacao com !review ou pelo painel.")
+            event.reply("Inicie sua avaliacao com " + BotConfig.getPrefix() + "review ou pelo painel.")
                     .setEphemeral(true)
                     .queue();
             return;
@@ -157,7 +208,7 @@ public class ButtonListener extends ListenerAdapter {
     private void handleAnonimo(ButtonInteractionEvent event) {
         ReviewSession session = ReviewSessionStore.getSession(event.getUser().getId(), event.getChannel().getId());
         if (session == null || session.getTipo() == null) {
-            event.reply("Inicie sua avaliacao com !review ou pelo painel.")
+            event.reply("Inicie sua avaliacao com " + BotConfig.getPrefix() + "review ou pelo painel.")
                     .setEphemeral(true)
                     .queue();
             return;
@@ -186,7 +237,7 @@ public class ButtonListener extends ListenerAdapter {
     private void handleRating(ButtonInteractionEvent event, String componentId) {
         ReviewSession session = ReviewSessionStore.getSession(event.getUser().getId(), event.getChannel().getId());
         if (session == null || session.getTipo() == null || session.getAnonimo() == null) {
-            event.reply("Inicie sua avaliacao com !review ou pelo painel.")
+            event.reply("Inicie sua avaliacao com " + BotConfig.getPrefix() + "review ou pelo painel.")
                     .setEphemeral(true)
                     .queue();
             return;
@@ -197,7 +248,7 @@ public class ButtonListener extends ListenerAdapter {
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setTitle("Avaliacao")
-                .setDescription("Nota selecionada: " + rating + "/5\n\nAgora envie sua avaliacao:\n`!review-texto <sua avaliacao>`")
+                .setDescription("Nota selecionada: " + rating + "/5\n\nAgora envie sua avaliacao:\n`" + BotConfig.getPrefix() + "review-texto <sua avaliacao>`")
                 .setColor(0x00ff00);
 
         event.replyEmbeds(embed.build())

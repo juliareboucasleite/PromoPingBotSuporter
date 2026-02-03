@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import com.promoping.bot.comandos.core.BaseCommand;
 import com.promoping.bot.dao.NewsConfigDAO;
 import com.promoping.bot.security.AccessControl;
+import com.promoping.bot.utils.BotConfig;
 import com.promoping.bot.utils.EmbedBuilder;
 
 import java.util.Arrays;
@@ -48,6 +49,7 @@ public class NewsCommand extends BaseCommand {
             return;
         }
         
+        String prefix = BotConfig.getPrefix();
         String action = args.length > 0 ? args[0].toLowerCase() : "status";
         MessageChannel channel = event.getChannel();
         
@@ -63,7 +65,7 @@ public class NewsCommand extends BaseCommand {
                 
                 if (config == null) {
                     embed.addField("Status", "Sistema não configurado", false)
-                            .addField("Como configurar", "Use `!news configurar <canal-id>` para ativar o sistema de notícias.", false);
+                            .addField("Como configurar", "Use `" + prefix + "news configurar <canal-id>` para ativar o sistema de notícias.", false);
                 } else {
                     TextChannel newsChannel = event.getJDA().getTextChannelById(config.getChannelId());
                     
@@ -79,7 +81,7 @@ public class NewsCommand extends BaseCommand {
                 
             } else if (action.equals("configurar") || action.equals("config")) {
                 if (args.length < 2) {
-                    channel.sendMessage("Por favor, forneça o ID do canal.\n**Uso:** `!news configurar <canal-id>`\n**Exemplo:** `!news configurar 123456789012345678`")
+                    channel.sendMessage("Por favor, forneça o ID do canal.\n**Uso:** `" + prefix + "news configurar <canal-id>`\n**Exemplo:** `" + prefix + "news configurar 123456789012345678`")
                             .queue();
                     return;
                 }
@@ -113,7 +115,7 @@ public class NewsCommand extends BaseCommand {
                 NewsConfigDAO.NewsConfig config = newsConfigDAO.getActiveConfig();
                 
                 if (config == null) {
-                    channel.sendMessage("Sistema de notícias não configurado! Use `!news configurar <canal-id>` primeiro.").queue();
+                    channel.sendMessage("Sistema de notícias não configurado! Use `" + prefix + "news configurar <canal-id>` primeiro.").queue();
                     return;
                 }
                 
@@ -155,7 +157,7 @@ public class NewsCommand extends BaseCommand {
                         "• `configurar <canal-id>` - Configura canal de notícias\n" +
                         "• `testar` - Envia uma notícia de teste\n" +
                         "• `desativar` - Desativa o sistema\n\n" +
-                        "**Exemplo:** `!news configurar 123456789012345678`"
+                        "**Exemplo:** `" + prefix + "news configurar 123456789012345678`"
                 ).queue();
             }
             

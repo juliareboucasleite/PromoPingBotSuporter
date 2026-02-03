@@ -22,6 +22,7 @@ import com.promoping.bot.services.AnnouncementsService;
 import com.promoping.bot.services.ChannelService;
 import com.promoping.bot.services.MessageService;
 import com.promoping.bot.services.StatusService;
+import com.promoping.bot.utils.BotConfig;
 
 import java.util.Set;
 
@@ -113,17 +114,17 @@ public class Bot extends ListenerAdapter {
                 }
                 
                 event.deferReply().queue();
-                
+                String prefix = BotConfig.getPrefix();
                 com.promoping.bot.utils.EmbedBuilder embed = new com.promoping.bot.utils.EmbedBuilder()
                         .setTitle("Avaliação")
                         .setDescription(
                                 "**Avaliando:** " + (tipo.equals("site") ? "Site" : tipo.equals("bot") ? "Bot" : "Suporte") + "\n" +
                                 "**Anónimo:** " + (isAnonimo ? "Sim" : "Não") + "\n\n" +
                                 "**Por favor, envie sua avaliação:**\n" +
-                                "Use o comando `!review-texto <sua avaliação>`\n\n" +
-                                "**Exemplo:** `!review-texto Excelente serviço! Muito útil.`"
+                                "Use o comando `" + prefix + "review-texto <sua avaliação>`\n\n" +
+                                "**Exemplo:** `" + prefix + "review-texto Excelente serviço! Muito útil.`"
                         )
-                        .addField("Dica", "Você também pode incluir uma nota de 1 a 5 estrelas usando: `!review-texto 5 Estrelas Excelente!`", false)
+                        .addField("Dica", "Você também pode incluir uma nota de 1 a 5 estrelas usando: `" + prefix + "review-texto 5 Estrelas Excelente!`", false)
                         .setColor(0x00ff00)
                         .setTimestamp();
                 

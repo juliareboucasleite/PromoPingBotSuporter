@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import com.promoping.bot.comandos.core.BaseCommand;
 import com.promoping.bot.security.AccessControl;
 import com.promoping.bot.services.MessageService;
+import com.promoping.bot.utils.BotConfig;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,6 +44,7 @@ public class ClearCommand extends BaseCommand {
     @Override
     public void execute(MessageReceivedEvent event, String[] args) {
         MessageChannel channel = event.getChannel();
+        String prefix = BotConfig.getPrefix();
         
         if (!accessControl.hasPermission(event.getMember(), Permission.MESSAGE_MANAGE) &&
             !accessControl.isAdmin(event.getMember())) {
@@ -66,7 +68,7 @@ public class ClearCommand extends BaseCommand {
         }
         
         if (args.length == 0) {
-            channel.sendMessage("Por favor, forneça um número válido de mensagens para deletar (1-100).\n**Uso:** `!clear <número>`")
+            channel.sendMessage("Por favor, forneça um número válido de mensagens para deletar (1-100).\n**Uso:** `" + prefix + "clear <número>`")
                     .queue();
             return;
         }
@@ -94,7 +96,7 @@ public class ClearCommand extends BaseCommand {
             confirmMsg.delete().queueAfter(3, TimeUnit.SECONDS);
             
         } catch (NumberFormatException e) {
-            channel.sendMessage("Por favor, forneça um número válido de mensagens para deletar (1-100).\n**Uso:** `!clear <número>`")
+            channel.sendMessage("Por favor, forneça um número válido de mensagens para deletar (1-100).\n**Uso:** `" + prefix + "clear <número>`")
                     .queue();
         } catch (Exception e) {
             channel.sendMessage("Ocorreu um erro ao deletar as mensagens. Tente novamente.")

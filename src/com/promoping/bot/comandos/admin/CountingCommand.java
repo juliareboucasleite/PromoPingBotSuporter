@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import com.promoping.bot.comandos.core.BaseCommand;
 import com.promoping.bot.dao.CountingDAO;
 import com.promoping.bot.security.AccessControl;
+import com.promoping.bot.utils.BotConfig;
 import com.promoping.bot.utils.EmbedBuilder;
 
 import java.util.Arrays;
@@ -47,6 +48,7 @@ public class CountingCommand extends BaseCommand {
             return;
         }
         
+        String prefix = BotConfig.getPrefix();
         String action = args.length > 0 ? args[0].toLowerCase() : "status";
         
         try {
@@ -60,7 +62,7 @@ public class CountingCommand extends BaseCommand {
                 
                 if (config == null) {
                     embed.setDescription("Sistema de contagem não configurado.")
-                            .addField("Como configurar", "Use `!counting configurar <canal>` para configurar um canal de contagem.", false);
+                            .addField("Como configurar", "Use `" + prefix + "counting configurar <canal>` para configurar um canal de contagem.", false);
                 } else {
                     TextChannel channel = event.getGuild().getTextChannelById(config.getChannelId());
                     
@@ -75,7 +77,7 @@ public class CountingCommand extends BaseCommand {
                 
             } else if (action.equals("configurar") || action.equals("config") || action.equals("set")) {
                 if (args.length < 2) {
-                    event.getChannel().sendMessage("Por favor, mencione o canal ou forneça o ID.\n**Uso:** `!counting configurar #canal`")
+                    event.getChannel().sendMessage("Por favor, mencione o canal ou forneça o ID.\n**Uso:** `" + prefix + "counting configurar #canal`")
                             .queue();
                     return;
                 }
@@ -124,7 +126,7 @@ public class CountingCommand extends BaseCommand {
                         "• `configurar <canal>` - Configura canal de contagem\n" +
                         "• `reset` - Reseta a contagem para 0\n" +
                         "• `desativar` - Desativa o sistema\n\n" +
-                        "**Exemplo:** `!counting configurar #contagem`"
+                        "**Exemplo:** `" + prefix + "counting configurar #contagem`"
                 ).queue();
             }
             

@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import com.promoping.bot.comandos.core.BaseCommand;
 import com.promoping.bot.security.AccessControl;
 import com.promoping.bot.utils.EmbedBuilder;
+import com.promoping.bot.utils.BotConfig;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,6 +44,7 @@ public class CommunityPanelCommand extends BaseCommand {
             event.getChannel().sendMessage("Este comando só pode ser usado em um servidor!").queue();
             return;
         }
+        String prefix = BotConfig.getPrefix();
         
         if (!accessControl.isAdmin(event.getMember())) {
             EmbedBuilder embed = new EmbedBuilder()
@@ -65,7 +67,7 @@ public class CommunityPanelCommand extends BaseCommand {
             if (mentionedChannel != null) {
                 targetChannel = mentionedChannel;
             } else {
-                event.getChannel().sendMessage("Canal inválido! Mencione um canal de texto válido ou use o comando no canal desejado.\n**Exemplo:** `!community-panel #community-resources`")
+                event.getChannel().sendMessage("Canal inválido! Mencione um canal de texto válido ou use o comando no canal desejado.\n**Exemplo:** `" + prefix + "community-panel #community-resources`")
                         .queue();
                 return;
             }

@@ -3,6 +3,7 @@ package com.promoping.bot.listeners;
 import com.promoping.bot.comandos.core.Command;
 import com.promoping.bot.comandos.core.CommandManager;
 import com.promoping.bot.security.AccessControl;
+import com.promoping.bot.utils.BotConfig;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -19,9 +20,10 @@ public class MessageListener extends ListenerAdapter {
         if (!AccessControl.canUseBot(event.getMember())) return;
 
         String raw = event.getMessage().getContentRaw();
-        if (!raw.startsWith("!")) return;
+        String prefix = BotConfig.getPrefix();
+        if (!raw.startsWith(prefix)) return;
 
-        String[] parts = raw.substring(1).split("\\s+");
+        String[] parts = raw.substring(prefix.length()).split("\\s+");
         String name = parts[0].toLowerCase();
         String[] args = Arrays.copyOfRange(parts, 1, parts.length);
 

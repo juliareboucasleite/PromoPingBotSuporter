@@ -6,6 +6,7 @@ import com.promoping.bot.comandos.core.BaseCommand;
 import com.promoping.bot.dao.WebhookConfigDAO;
 import com.promoping.bot.security.AccessControl;
 import com.promoping.bot.services.AnnouncementsService;
+import com.promoping.bot.utils.BotConfig;
 import com.promoping.bot.utils.EmbedBuilder;
 
 import java.util.HashSet;
@@ -49,6 +50,7 @@ public class AnnouncementsCommand extends BaseCommand {
     public void execute(MessageReceivedEvent event, String[] args) {
         String action = args.length > 0 ? args[0].toLowerCase() : "status";
         MessageChannel channel = event.getChannel();
+        String prefix = BotConfig.getPrefix();
         
         // Verificar permissões
         if (action.equals("sincronizar") || action.equals("sync")) {
@@ -101,7 +103,7 @@ public class AnnouncementsCommand extends BaseCommand {
                 
             } else if (action.equals("configurar") || action.equals("config")) {
                 if (args.length < 2) {
-                    channel.sendMessage("Por favor, forneça a URL do webhook.\n**Uso:** `!announcements configurar <webhook-url>`")
+                    channel.sendMessage("Por favor, forneça a URL do webhook.\n**Uso:** `" + prefix + "announcements configurar <webhook-url>`")
                             .queue();
                     return;
                 }
@@ -153,7 +155,7 @@ public class AnnouncementsCommand extends BaseCommand {
                         "• `configurar <url>` - Configura webhook URL (opcional)\n" +
                         "• `testar` - Envia uma notificação de teste\n" +
                         "• `sincronizar` - Sincroniza todas as releases do GitHub (requer cargo específico)\n\n" +
-                        "**Exemplo:** `!announcements status`"
+                        "**Exemplo:** `" + prefix + "announcements status`"
                 ).queue();
             }
             

@@ -2,6 +2,7 @@ package com.promoping.bot.services;
 
 import net.dv8tion.jda.api.JDA;
 import com.promoping.bot.dao.DatabaseConnection;
+import com.promoping.bot.utils.BotConfig;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -48,10 +49,7 @@ public class StatusService {
                 }
             }
             
-            String prefix = System.getenv("DISCORD_PREFIX");
-            if (prefix == null || prefix.isEmpty()) {
-                prefix = "!";
-            }
+            String prefix = BotConfig.getPrefix();
             
             String checkInterval = System.getenv("BOT_CHECK_INTERVAL");
             if (checkInterval == null || checkInterval.isEmpty()) {

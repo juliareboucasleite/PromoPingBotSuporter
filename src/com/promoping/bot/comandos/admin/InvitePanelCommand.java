@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import com.promoping.bot.comandos.core.BaseCommand;
 import com.promoping.bot.security.AccessControl;
+import com.promoping.bot.utils.BotConfig;
 import com.promoping.bot.utils.EmbedBuilder;
 
 import java.util.Arrays;
@@ -43,6 +44,7 @@ public class InvitePanelCommand extends BaseCommand {
             event.getChannel().sendMessage("Este comando só pode ser usado em um servidor!").queue();
             return;
         }
+        String prefix = BotConfig.getPrefix();
         
         if (!accessControl.isAdmin(event.getMember())) {
             EmbedBuilder embed = new EmbedBuilder()
@@ -65,7 +67,7 @@ public class InvitePanelCommand extends BaseCommand {
             if (mentionedChannel != null) {
                 targetChannel = mentionedChannel;
             } else {
-                event.getChannel().sendMessage("Canal inválido! Mencione um canal de texto válido ou use o comando no canal desejado.\n**Exemplo:** `!invite-panel #bem-vindo`")
+                event.getChannel().sendMessage("Canal inválido! Mencione um canal de texto válido ou use o comando no canal desejado.\n**Exemplo:** `" + prefix + "invite-panel #bem-vindo`")
                         .queue();
                 return;
             }
@@ -94,7 +96,7 @@ public class InvitePanelCommand extends BaseCommand {
                 .setColor(0xffa500)
                 .addField("Site", "[Acessar Site](" + siteUrl + ")", true)
                 .addField("Bot", "[Adicionar Bot](" + botInviteUrl + ")", true)
-                .addField("Suporte", "Use `!suporte` para criar um ticket", true)
+                .addField("Suporte", "Use `" + prefix + "suporte` para criar um ticket", true)
                 .setThumbnail(event.getJDA().getSelfUser().getAvatarUrl())
                 .setTimestamp()
                 .setFooter("©PromoPing • Todos os direitos reservados");        

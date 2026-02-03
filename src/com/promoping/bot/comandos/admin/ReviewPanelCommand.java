@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import com.promoping.bot.comandos.core.BaseCommand;
 import com.promoping.bot.security.AccessControl;
+import com.promoping.bot.utils.BotConfig;
 import com.promoping.bot.utils.EmbedBuilder;
 
 import java.util.Arrays;
@@ -43,6 +44,7 @@ public class ReviewPanelCommand extends BaseCommand {
             event.getChannel().sendMessage("Este comando só pode ser usado em um servidor!").queue();
             return;
         }
+        String prefix = BotConfig.getPrefix();
         
         if (!accessControl.isAdmin(event.getMember())) {
             EmbedBuilder embed = new EmbedBuilder()
@@ -65,7 +67,7 @@ public class ReviewPanelCommand extends BaseCommand {
             if (mentionedChannel != null) {
                 targetChannel = mentionedChannel;
             } else {
-                event.getChannel().sendMessage("Canal inválido! Mencione um canal de texto válido ou use o comando no canal desejado.\n**Exemplo:** `!review-panel #reviews`")
+                event.getChannel().sendMessage("Canal inválido! Mencione um canal de texto válido ou use o comando no canal desejado.\n**Exemplo:** `" + prefix + "review-panel #reviews`")
                         .queue();
                 return;
             }
@@ -84,7 +86,7 @@ public class ReviewPanelCommand extends BaseCommand {
                         "**Você pode incluir uma nota de 1 a 5 estrelas na sua avaliação!**"
                 )
                 .setColor(0xffa500)
-                .addField("Comandos Disponíveis", "`!review` - Iniciar avaliação\n`/review` - Iniciar avaliação (slash command)", false)
+                .addField("Comandos Disponíveis", "`" + prefix + "review` - Iniciar avaliação\n`/review` - Iniciar avaliação (slash command)", false)
                 .setTimestamp()
                 .setFooter("©PromoPing • Todos os direitos reservados");        
         targetChannel.sendMessageEmbeds(reviewPanelEmbed.build())

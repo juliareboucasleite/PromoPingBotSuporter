@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import com.promoping.bot.comandos.core.BaseCommand;
 import com.promoping.bot.security.AccessControl;
+import com.promoping.bot.utils.BotConfig;
 import com.promoping.bot.utils.EmbedBuilder;
 
 import java.util.Arrays;
@@ -56,6 +57,7 @@ public class SponsorPanelCommand extends BaseCommand {
         }
 
         TextChannel targetChannel = event.getChannel().asTextChannel();
+        String prefix = BotConfig.getPrefix();
 
         if (args.length > 0) {
             String channelMention = args[0];
@@ -65,7 +67,7 @@ public class SponsorPanelCommand extends BaseCommand {
             if (mentionedChannel != null) {
                 targetChannel = mentionedChannel;
             } else {
-                event.getChannel().sendMessage("Canal invalido! Mencione um canal de texto valido ou use o comando no canal desejado.\n**Exemplo:** `!sponsor-panel #sponsors`")
+                event.getChannel().sendMessage("Canal invalido! Mencione um canal de texto valido ou use o comando no canal desejado.\n**Exemplo:** `" + prefix + "sponsor-panel #sponsors`")
                         .queue();
                 return;
             }
